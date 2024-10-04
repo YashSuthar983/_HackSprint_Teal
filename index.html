@@ -7,7 +7,30 @@
 
     <!-- Link to Google Fonts (Montserrat) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<!-- for alarm styling -->
+<style>
+    <div class="tab-container">
+    <button class="tab-button active" data-target="clockTab">Clock</button>
+    <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
+    <button class="tab-button" data-target="countdownTab">Countdown</button>
+    <button class="tab-button" data-target="alarmTab">Alarm</button>
+</div>
 
+<!-- Existing tab contents -->
+
+<div id="alarmTab" class="tab-content">
+    <div class="clock-container">
+        <h1>Set Alarm</h1>
+        <label for="alarmHour">Hour: </label>
+        <input type="number" id="alarmHour" min="0" max="23" placeholder="HH">
+        <label for="alarmMinute">Minute: </label>
+        <input type="number" id="alarmMinute" min="0" max="59" placeholder="MM">
+        <button id="setAlarmButton">Set Alarm</button>
+        <div id="alarmStatus"></div>
+    </div>
+</div>
+
+</style>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -166,9 +189,15 @@ body.dark-mode .clock-container {
 <body>
 
     <div class="tab-container">
+        
         <button class="tab-button active" data-target="clockTab">Clock</button>
+        <button class="tab-button" data-target="alarmTab">Alarm</button> <!-- Alarm tab -->
+
         <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
         <button class="tab-button" data-target="countdownTab">Countdown</button>
+
+    
+    
     </div>
     
     <div id="clockTab" class="tab-content active">
@@ -198,16 +227,24 @@ body.dark-mode .clock-container {
             <button id="resetCountdown">Reset Countdown</button>
         </div>
     </div>
-
-    <h1>Clock</h1>
-    <div id="clock">00:00:00</div>
+    <div id="alarmTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Set Alarm</h1>
+            <label for="alarmHour">Hour: </label>
+            <input type="number" id="alarmHour" min="0" max="23" placeholder="HH">
+            <label for="alarmMinute">Minute: </label>
+            <input type="number" id="alarmMinute" min="0" max="59" placeholder="MM">
+            <button id="setAlarmButton">Set Alarm</button>
+            <div id="alarmStatus"></div>
+        </div>
+    </div>
+    
 
     <div class="toggle-container">
         <label class="switch">
             <input type="checkbox" id="modeSwitch">
             <span class="slider"></span>
             
-            <h id = "">Dark/Light</h>
         </label>
     </div>
 
@@ -245,7 +282,142 @@ body.dark-mode .clock-container {
             body.classList.add('light-mode');
         }
 });
-    </script>
 
+// Tab switching functionality
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Add active class to the clicked button and the corresponding content
+        this.classList.add('active');
+        const targetTab = document.getElementById(this.getAttribute('data-target'));
+        targetTab.classList.add('active');
+    });
+});
+
+
+// Clock functionality (already provided)
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    document.getElementById("clock").innerHTML = `${hours}:${minutes}:${seconds}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Stopwatch functionality
+let stopwatchInterval;
+let stopwatchTime = 0;
+
+function updateStopwatch() {
+    stopwatchTime++;
+    let hours = Math.floor(stopwatchTime / 3600);
+    let minutes = Math.floor((stopwatchTime % 3600) / 60);
+    let seconds = stopwatchTime % 60;
+
+    document.getElementById("stopwatch").innerHTML = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+function pad(num) {
+    return num < 10 ? "0" + num : num;
+}
+
+document.getElementById('startStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+    stopwatchInterval = setInterval(updateStopwatch, 1000);
+});
+
+document.getElementById('stopStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+});
+
+document.getElementById('resetStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+    stopwatchTime = 0;
+    document.getElementById("stopwatch").innerHTML = "00:00:00";
+});
+
+// Countdown Timer functionality
+let countdownInterval;
+let countdownTime;
+
+function updateCountdown() {
+    countdownTime--;
+    let minutes = Math.floor(countdownTime / 60);
+    let seconds = countdownTime % 60;
+
+    if (countdownTime <= 0) {
+        clearInterval(countdownInterval);
+        alert('Time’s up!');
+    }
+
+    document.getElementById("countdown").innerHTML = `${pad(minutes)}:${pad(seconds)}`;
+}
+
+document.getElementById('startCountdown').addEventListener('click', function() {
+    const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+    const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
+    countdownTime = minutes * 60 + seconds;
+    clearInterval(countdownInterval);
+    countdownInterval = setInterval(updateCountdown, 1000);
+});
+
+document.getElementById('resetCountdown').addEventListener('click', function() {
+    clearInterval(countdownInterval);
+    document.getElementById('countdown').innerHTML = "00:00";
+});
+
+    </script>
+<!-- script for alarm function -->
+<script>
+    // Alarm functionality
+let alarmTime = null;
+let alarmTimeout = null;
+
+document.getElementById('setAlarmButton').addEventListener('click', function() {
+    const hour = parseInt(document.getElementById('alarmHour').value);
+    const minute = parseInt(document.getElementById('alarmMinute').value);
+
+    if (isNaN(hour) || isNaN(minute)) {
+        document.getElementById('alarmStatus').innerText = 'Please enter a valid time.';
+        return;
+    }
+
+    alarmTime = new Date();
+    alarmTime.setHours(hour);
+    alarmTime.setMinutes(minute);
+    alarmTime.setSeconds(0);
+
+    document.getElementById('alarmStatus').innerText = `Alarm set for ${pad(hour)}:${pad(minute)}.`;
+
+    if (alarmTimeout) clearTimeout(alarmTimeout);
+    alarmTimeout = setTimeout(checkAlarm, 1000);
+});
+
+function checkAlarm() {
+    const now = new Date();
+    if (alarmTime && now.getHours() === alarmTime.getHours() && now.getMinutes() === alarmTime.getMinutes()) {
+        alert('Alarm ringing!');
+        document.getElementById('alarmStatus').innerText = 'Alarm ringing!';
+        alarmTime = null;
+    } else {
+        // Check every second if the alarm time has been reached
+        alarmTimeout = setTimeout(checkAlarm, 1000);
+    }
+}
+
+</script>
 </body>
 </html>
