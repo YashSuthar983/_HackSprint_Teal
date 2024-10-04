@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teal</title>
+
+    <!-- Link to Google Fonts (Montserrat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            color: #ffffff;
+        }
+
+        body.light-mode {
+            background-color: #f0f0f0;
+            color: #333;}
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        #clock {
+            font-size: 96px;
+            font-weight: bold;
+            width: 380px;
+            background: #61dafb;
+            color: #282c34;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+.toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+body.light-mode {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode .clock-container {
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark-mode h1, body.dark-mode #clock {
+    text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .clock-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Tab container */
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Tab buttons styling */
+.tab-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s;
+    margin-right: 5px;
+}
+
+.tab-button:hover {
+    background-color: #0056b3;
+}
+
+/* Active tab styling */
+.tab-button.active {
+    background-color: #0056b3;
+}
+
+/* Content sections, hidden by default */
+.tab-content {
+    display: none;
+}
+
+/* Show the active tab's content */
+.tab-content.active {
+    display: block;}
+
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        <button class="tab-button active" data-target="clockTab">Clock</button>
+        <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
+        <button class="tab-button" data-target="countdownTab">Countdown</button>
+    </div>
+    
+    <div id="clockTab" class="tab-content active">
+        <div class="clock-container">
+            <h1>Current Time</h1>
+            <div id="clock">00:00:00</div>
+        </div>
+    </div>
+    
+    <div id="stopwatchTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Stopwatch</h1>
+            <div id="stopwatch">00:00:00</div>
+            <button id="startStopwatch">Start</button>
+            <button id="stopStopwatch">Stop</button>
+            <button id="resetStopwatch">Reset</button>
+        </div>
+    </div>
+    
+    <div id="countdownTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Countdown Timer</h1>
+            <input type="number" id="minutesInput" placeholder="Minutes" min="0">
+            <input type="number" id="secondsInput" placeholder="Seconds" min="0">
+            <div id="countdown">00:00</div>
+            <button id="startCountdown">Start Countdown</button>
+            <button id="resetCountdown">Reset Countdown</button>
+        </div>
+    </div>
+
+    <h1>Clock</h1>
+    <div id="clock">00:00:00</div>
+
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="modeSwitch">
+            <span class="slider"></span>
+            
+            <h id = "">Dark/Light</h>
+        </label>
+    </div>
+
+
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+           
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById("clock").innerHTML = timeString;
+        }
+
+
+        setInterval(updateClock, 1000);
+
+        updateClock();
+
+        const modeSwitch = document.getElementById('modeSwitch');
+        modeSwitch.addEventListener('change', function() {
+        const body = document.body;
+         if (modeSwitch.checked) {
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+        }
+});
+    </script>
+
+</body>
+</html>
