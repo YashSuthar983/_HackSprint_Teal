@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teal</title>
+
+    <!-- Link to Google Fonts (Montserrat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<!-- for alarm styling -->
+<style>
+    <div class="tab-container">
+    <button class="tab-button active" data-target="clockTab">Clock</button>
+    <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
+    <button class="tab-button" data-target="countdownTab">Countdown</button>
+    <button class="tab-button" data-target="alarmTab">Alarm</button>
+</div>
+
+<!-- Existing tab contents -->
+
+<div id="alarmTab" class="tab-content">
+    <div class="clock-container">
+        <h1>Set Alarm</h1>
+        <label for="alarmHour">Hour: </label>
+        <input type="number" id="alarmHour" min="0" max="23" placeholder="HH">
+        <label for="alarmMinute">Minute: </label>
+        <input type="number" id="alarmMinute" min="0" max="59" placeholder="MM">
+        <button id="setAlarmButton">Set Alarm</button>
+        <div id="alarmStatus"></div>
+    </div>
+</div>
+
+</style>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            color: #ffffff;
+        }
+
+        body.light-mode {
+            background-color: #f0f0f0;
+            color: #333;}
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        #clock {
+            font-size: 96px;
+            font-weight: bold;
+            width: 380px;
+            background: #61dafb;
+            color: #282c34;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+.toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+body.light-mode {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode .clock-container {
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark-mode h1, body.dark-mode #clock {
+    text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .clock-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Tab container */
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Tab buttons styling */
+.tab-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s;
+    margin-right: 5px;
+}
+
+.tab-button:hover {
+    background-color: #0056b3;
+}
+
+/* Active tab styling */
+.tab-button.active {
+    background-color: #0056b3;
+}
+
+/* Content sections, hidden by default */
+.tab-content {
+    display: none;
+}
+
+/* Show the active tab's content */
+.tab-content.active {
+    display: block;}
+
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        
+        <button class="tab-button active" data-target="clockTab">Clock</button>
+        <button class="tab-button" data-target="alarmTab">Alarm</button> <!-- Alarm tab -->
+
+        <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
+        <button class="tab-button" data-target="countdownTab">Countdown</button>
+        <button class="tab-button" data-target="International">International</button>
+
+
+    
+    
+    </div>
+    
+    <div id="clockTab" class="tab-content active">
+        <div class="clock-container">
+            <h1>Current Time</h1>
+            <div id="clock">00:00:00</div>
+        </div>
+    </div>
+    
+    <div id="stopwatchTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Stopwatch</h1>
+            <div id="stopwatch">00:00:00</div>
+            <button id="startStopwatch">Start</button>
+            <button id="stopStopwatch">Stop</button>
+            <button id="resetStopwatch">Reset</button>
+        </div>
+    </div>
+    
+    <div id="countdownTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Countdown</h1>
+            <input type="number" id="minutesInput" placeholder="Minutes" min="0">
+            <input type="number" id="secondsInput" placeholder="Seconds" min="0">
+            <div id="countdown">00:00</div>
+            <button id="startCountdown">Start Countdown</button>
+            <button id="resetCountdown">Reset Countdown</button>
+        </div>
+    </div>
+    <div id="alarmTab" class="tab-content">
+        <div class="clock-container">
+            <h1>Set Alarm</h1>
+            <label for="alarmHour">Hour: </label>
+            <input type="number" id="alarmHour" min="0" max="23" placeholder="HH">
+            <label for="alarmMinute">Minute: </label>
+            <input type="number" id="alarmMinute" min="0" max="59" placeholder="MM">
+            <button id="setAlarmButton">Set Alarm</button>
+            <div id="alarmStatus"></div>
+        </div>
+    </div>
+    <div id="International" class="tab-content">
+        <div class="clock-container">
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Clock</title>
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .clock-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .clock {
+            font-size: 24px;
+            background: #61dafb;
+            color: #282c34;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            width: 280px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>International Clock</h1>
+
+    <div class="clock-container">
+        <div class="clock" id="newYorkClock">New York: 00:00:00</div>
+        <div class="clock" id="londonClock">London: 00:00:00</div>
+        <div class="clock" id="tokyoClock">Tokyo: 00:00:00</div>
+        <div class="clock" id="sydneyClock">Sydney: 00:00:00</div>
+    </div>
+
+    <script>
+        function updateInternationalClocks() {
+            // Get current time
+            const now = new Date();
+
+            // New York (UTC -4)
+            const newYorkTime = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+            document.getElementById('newYorkClock').textContent = `New York: ${formatTime(newYorkTime)}`;
+
+            // London (UTC +0)
+            const londonTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/London" }));
+            document.getElementById('londonClock').textContent = `London: ${formatTime(londonTime)}`;
+
+            // Tokyo (UTC +9)
+            const tokyoTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+            document.getElementById('tokyoClock').textContent = `Tokyo: ${formatTime(tokyoTime)}`;
+
+            // Sydney (UTC +11)
+            const sydneyTime = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
+            document.getElementById('sydneyClock').textContent = `Sydney: ${formatTime(sydneyTime)}`;
+        }
+
+        // Function to format the time in HH:MM:SS format
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let seconds = date.getSeconds();
+
+            // Add leading zero if necessary
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        // Update clocks every second
+        setInterval(updateInternationalClocks, 1000);
+        updateInternationalClocks(); // Run initially
+    </script>
+
+</body>
+</html>
+
+        </div>
+    </div>
+    
+
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="modeSwitch">
+            <span class="slider"></span>
+            
+        </label>
+    </div>
+
+
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+           
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById("clock").innerHTML = timeString;
+        }
+
+
+        setInterval(updateClock, 1000);
+
+        updateClock();
+
+        const modeSwitch = document.getElementById('modeSwitch');
+        modeSwitch.addEventListener('change', function() {
+        const body = document.body;
+         if (modeSwitch.checked) {
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+        }
+});
+
+// Tab switching functionality
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Add active class to the clicked button and the corresponding content
+        this.classList.add('active');
+        const targetTab = document.getElementById(this.getAttribute('data-target'));
+        targetTab.classList.add('active');
+    });
+});
+
+
+// Clock functionality (already provided)
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    document.getElementById("clock").innerHTML = `${hours}:${minutes}:${seconds}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Stopwatch functionality
+let stopwatchInterval;
+let stopwatchTime = 0;
+
+function updateStopwatch() {
+    stopwatchTime++;
+    let hours = Math.floor(stopwatchTime / 3600);
+    let minutes = Math.floor((stopwatchTime % 3600) / 60);
+    let seconds = stopwatchTime % 60;
+
+    document.getElementById("stopwatch").innerHTML = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+function pad(num) {
+    return num < 10 ? "0" + num : num;
+}
+
+document.getElementById('startStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+    stopwatchInterval = setInterval(updateStopwatch, 1000);
+});
+
+document.getElementById('stopStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+});
+
+document.getElementById('resetStopwatch').addEventListener('click', function() {
+    clearInterval(stopwatchInterval);
+    stopwatchTime = 0;
+    document.getElementById("stopwatch").innerHTML = "00:00:00";
+});
+
+// Countdown Timer functionality
+let countdownInterval;
+let countdownTime;
+
+function updateCountdown() {
+    countdownTime--;
+    let minutes = Math.floor(countdownTime / 60);
+    let seconds = countdownTime % 60;
+
+    if (countdownTime <= 0) {
+        clearInterval(countdownInterval);
+        alert('Time’s up!');
+    }
+
+    document.getElementById("countdown").innerHTML = `${pad(minutes)}:${pad(seconds)}`;
+}
+
+document.getElementById('startCountdown').addEventListener('click', function() {
+    const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+    const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
+    countdownTime = minutes * 60 + seconds;
+    clearInterval(countdownInterval);
+    countdownInterval = setInterval(updateCountdown, 1000);
+});
+
+document.getElementById('resetCountdown').addEventListener('click', function() {
+    clearInterval(countdownInterval);
+    document.getElementById('countdown').innerHTML = "00:00";
+});
+
+    </script>
+<!-- script for alarm function -->
+<script>
+    // Alarm functionality
+let alarmTime = null;
+let alarmTimeout = null;
+
+document.getElementById('setAlarmButton').addEventListener('click', function() {
+    const hour = parseInt(document.getElementById('alarmHour').value);
+    const minute = parseInt(document.getElementById('alarmMinute').value);
+
+    if (isNaN(hour) || isNaN(minute)) {
+        document.getElementById('alarmStatus').innerText = 'Please enter a valid time.';
+        return;
+    }
+
+    alarmTime = new Date();
+    alarmTime.setHours(hour);
+    alarmTime.setMinutes(minute);
+    alarmTime.setSeconds(0);
+
+    document.getElementById('alarmStatus').innerText = `Alarm set for ${pad(hour)}:${pad(minute)}.`;
+
+    if (alarmTimeout) clearTimeout(alarmTimeout);
+    alarmTimeout = setTimeout(checkAlarm, 1000);
+});
+
+function checkAlarm() {
+    const now = new Date();
+    if (alarmTime && now.getHours() === alarmTime.getHours() && now.getMinutes() === alarmTime.getMinutes()) {
+        alert('Alarm ringing!');
+        document.getElementById('alarmStatus').innerText = 'Alarm ringing!';
+        alarmTime = null;
+    } else {
+        // Check every second if the alarm time has been reached
+        alarmTimeout = setTimeout(checkAlarm, 1000);
+    }
+}
+
+</script>
+</body>
+</html>
