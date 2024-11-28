@@ -9,64 +9,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
 <!-- for alarm styling -->
 <style>
-    <div class="tab-container">
-    <button class="tab-button active" data-target="clockTab">Clock</button>
-    <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
-    <button class="tab-button" data-target="countdownTab">Countdown</button>
-    <button class="tab-button" data-target="alarmTab">Alarm</button>
-</div>
+/* Base body styling */
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #282c34;
+    color: #ffffff;
+}
 
-<!-- Existing tab contents -->
+/* Light mode adjustments */
+body.light-mode {
+    background-color: #f0f0f0;
+    color: #333;
+}
 
-<div id="alarmTab" class="tab-content">
-    <div class="clock-container">
-        <h1>Set Alarm</h1>
-        <label for="alarmHour">Hour: </label>
-        <input type="number" id="alarmHour" min="0" max="23" placeholder="HH">
-        <label for="alarmMinute">Minute: </label>
-        <input type="number" id="alarmMinute" min="0" max="59" placeholder="MM">
-        <button id="setAlarmButton">Set Alarm</button>
-        <div id="alarmStatus"></div>
-    </div>
-</div>
+/* Dark mode adjustments */
+body.dark-mode {
+    background-color: #282c34;
+    color: #fff;
+}
 
-</style>
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #282c34;
-            color: #ffffff;
-        }
+/* Header styling */
+h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
 
-        body.light-mode {
-            background-color: #f0f0f0;
-            color: #333;}
+/* Main clock styling */
+#clock {
+    font-size: 96px;
+    font-weight: bold;
+    width: 380px;
+    background: #61dafb;
+    color: #282c34;
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
 
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
-
-        #clock {
-            font-size: 96px;
-            font-weight: bold;
-            width: 380px;
-            background: #61dafb;
-            color: #282c34;
-            padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-
+/* Toggle switch container */
 .toggle-container {
     position: absolute;
     top: 20px;
@@ -79,7 +67,6 @@
     width: 60px;
     height: 34px;
 }
-
 
 .switch input {
     opacity: 0;
@@ -111,39 +98,12 @@
     border-radius: 50%;
 }
 
-
 input:checked + .slider {
     background-color: #007bff;
 }
 
-
 input:checked + .slider:before {
     transform: translateX(26px);
-}
-
-
-body.light-mode {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-body.light-mode .clock-container {
-    background-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode {
-    background-color: #333;
-    color: #fff;
-}
-
-body.dark-mode h1, body.dark-mode #clock {
-    text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .clock-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* Tab container */
@@ -170,19 +130,457 @@ body.dark-mode .clock-container {
     background-color: #0056b3;
 }
 
-/* Active tab styling */
 .tab-button.active {
     background-color: #0056b3;
 }
 
-/* Content sections, hidden by default */
+/* Content sections hidden by default */
 .tab-content {
     display: none;
 }
 
-/* Show the active tab's content */
+/* Show active tab content */
 .tab-content.active {
-    display: block;}
+    display: block;
+}
+
+/* International Clock Section */
+#internationalClockTab {
+    padding: 20px;
+    text-align: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* International Clock Tab title */
+#internationalClockTab h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #61dafb;
+}
+
+/* Clock table styling */
+#internationalClockTable {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Table headers and cells */
+#internationalClockTable th, #internationalClockTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: white;
+}
+
+/* Table header styling */
+#internationalClockTable th {
+    background-color: #007bff;
+    font-weight: bold;
+}
+
+#internationalClockTable tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for rows */
+#internationalClockTable tr:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Light mode table styles */
+body.light-mode #internationalClockTable th {
+    background-color: #0056b3;
+}
+
+body.light-mode #internationalClockTable td {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Dark mode table styles */
+body.dark-mode #internationalClockTable th {
+    background-color: #0056b3;
+}
+
+body.dark-mode #internationalClockTable td {
+    background-color: #282c34;
+    color: white;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    #internationalClockTable {
+        width: 90%;
+    }
+
+    #internationalClockTable th, #internationalClockTable td {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+    #internationalClockTable th, #internationalClockTable td {
+        font-size: 12px;
+    }
+}
+
+/* Clock container styling for horizontal layout */
+#internationalClockTab .clock-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Styling for each city block */
+#internationalClockTab .city-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    min-width: 120px;
+    text-align: center;
+}
+
+/* City name and time styling */
+#internationalClockTab .city-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+#internationalClockTab .city-time {
+    font-size: 18px;
+    color: white;
+}
+
+/* Light mode styling for city blocks */
+body.light-mode #internationalClockTab .city-block {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode #internationalClockTab .city-name,
+body.light-mode #internationalClockTab .city-time {
+    color: #333;
+}
+
+/* Dark mode city blocks */
+body.dark-mode #internationalClockTab .city-block {
+    background-color: #282c34;
+    color: white;
+}
+
+body.dark-mode #internationalClockTab .city-name,
+body.dark-mode #internationalClockTab .city-time {
+    color: white;
+}
+
+/* Stopwatch Tab Container */
+#stopwatchTab {
+    padding: 20px;
+    text-align: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* Stopwatch Title */
+#stopwatchTab h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #61dafb;
+}
+
+/* Stopwatch Display */
+#stopwatch {
+    font-size: 48px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #282c34;
+    padding: 20px 40px;
+    border-radius: 10px;
+    width: 220px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Stopwatch Buttons */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover and active states */
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Light mode adjustments */
+body.light-mode #stopwatchTab {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode #stopwatch {
+    background: #f0f0f0;
+    color: #333;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.light-mode button:hover {
+    background-color: #0056b3;
+}
+
+/* Dark mode adjustments */
+body.dark-mode #stopwatchTab {
+    background-color: #282c34;
+    color: white;
+}
+
+body.dark-mode #stopwatch {
+    background: #282c34;
+    color: white;
+}
+
+body.dark-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.dark-mode button:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode button:active {
+    transform: scale(0.95);
+}
+
+/* Alarm Tab Container */
+#alarmTab {
+    padding: 20px;
+    text-align: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* Alarm Title */
+#alarmTab h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #61dafb;
+}
+
+/* Alarm Display */
+#alarm {
+    font-size: 48px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #282c34;
+    padding: 20px 40px;
+    border-radius: 10px;
+    width: 220px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Alarm Buttons */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover and active states */
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Light mode adjustments for Alarm */
+body.light-mode #alarmTab {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode #alarm {
+    background: #f0f0f0;
+    color: #333;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.light-mode button:hover {
+    background-color: #0056b3;
+}
+
+/* Dark mode adjustments for Alarm */
+body.dark-mode #alarmTab {
+    background-color: #282c34;
+    color: white;
+}
+
+body.dark-mode #alarm {
+    background: #282c34;
+    color: white;
+}
+
+body.dark-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.dark-mode button:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode button:active {
+    transform: scale(0.95);
+}
+
+/* Countdown Tab Container */
+#countdownTab {
+    padding: 20px;
+    text-align: center;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* Countdown Title */
+#countdownTab h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #61dafb;
+}
+
+/* Countdown Display */
+#countdown {
+    font-size: 48px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #282c34;
+    padding: 20px 40px;
+    border-radius: 10px;
+    width: 220px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Countdown Buttons */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover and active states */
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Light mode adjustments for Countdown */
+body.light-mode #countdownTab {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-mode #countdown {
+    background: #f0f0f0;
+    color: #333;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.light-mode button:hover {
+    background-color: #0056b3;
+}
+
+/* Dark mode adjustments for Countdown */
+body.dark-mode #countdownTab {
+    background-color: #282c34;
+    color: white;
+}
+
+body.dark-mode #countdown {
+    background: #282c34;
+    color: white;
+}
+
+body.dark-mode button {
+    background-color: #007bff;
+    color: white;
+}
+
+body.dark-mode button:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode button:active {
+    transform: scale(0.95);
+}
+
+
+
 
     </style>
 </head>
@@ -195,6 +593,7 @@ body.dark-mode .clock-container {
 
         <button class="tab-button" data-target="stopwatchTab">Stopwatch</button>
         <button class="tab-button" data-target="countdownTab">Countdown</button>
+        <button class="tab-button" data-target="internationalClockTab">InternationalClock</button>
 
     
     
@@ -238,8 +637,16 @@ body.dark-mode .clock-container {
             <div id="alarmStatus"></div>
         </div>
     </div>
+    <div id="internationalClockTab" class="tab-content">
+        <h1>International Time</h1>
+        <div id="internationalClockContainer" class="clock-container">
+            <!-- Dynamic time rows will be added here -->
+        </div>
+    </div>
     
-
+    
+    
+    
     <div class="toggle-container">
         <label class="switch">
             <input type="checkbox" id="modeSwitch">
@@ -383,8 +790,9 @@ document.getElementById('resetCountdown').addEventListener('click', function() {
 <!-- script for alarm function -->
 <script>
     // Alarm functionality
+// Alarm functionality
 let alarmTime = null;
-let alarmTimeout = null;
+let alarmInterval = null;
 
 document.getElementById('setAlarmButton').addEventListener('click', function() {
     const hour = parseInt(document.getElementById('alarmHour').value);
@@ -402,21 +810,76 @@ document.getElementById('setAlarmButton').addEventListener('click', function() {
 
     document.getElementById('alarmStatus').innerText = `Alarm set for ${pad(hour)}:${pad(minute)}.`;
 
-    if (alarmTimeout) clearTimeout(alarmTimeout);
-    alarmTimeout = setTimeout(checkAlarm, 1000);
+    // Clear any existing interval
+    if (alarmInterval) clearInterval(alarmInterval);
+
+    // Set a new interval to check the alarm every second
+    alarmInterval = setInterval(checkAlarm, 1000);
 });
 
 function checkAlarm() {
     const now = new Date();
-    if (alarmTime && now.getHours() === alarmTime.getHours() && now.getMinutes() === alarmTime.getMinutes()) {
-        alert('Alarm ringing!');
-        document.getElementById('alarmStatus').innerText = 'Alarm ringing!';
-        alarmTime = null;
-    } else {
-        // Check every second if the alarm time has been reached
-        alarmTimeout = setTimeout(checkAlarm, 1000);
+    if (alarmTime && now.getHours() === alarmTime.getHours() && now.getMinutes() === alarmTime.getMinutes() && now.getSeconds() === 0) {
+        alert('Alarm!');
+        clearInterval(alarmInterval);  // Stop checking once the alarm triggers
     }
 }
+
+
+// International Clock Data
+
+const cities = [
+    { name: "New York", timezone: "America/New_York" },
+    { name: "London", timezone: "Europe/London" },
+    { name: "Tokyo", timezone: "Asia/Tokyo" },
+    { name: "Sydney", timezone: "Australia/Sydney" },
+    { name: "Dubai", timezone: "Asia/Dubai" },
+    { name: "Mumbai", timezone: "Asia/Kolkata" },
+    { name: "Paris", timezone: "Europe/Paris" },
+    { name: "Berlin", timezone: "Europe/Berlin" },
+    { name: "Los Angeles", timezone: "America/Los_Angeles" },
+    { name: "Chicago", timezone: "America/Chicago" },
+    { name: "Rome", timezone: "Europe/Rome" },
+    { name: "Beijing", timezone: "Asia/Shanghai" },
+    { name: "Mexico City", timezone: "America/Mexico_City" },
+    { name: "Rio de Janeiro", timezone: "America/Sao_Paulo" },
+    { name: "Moscow", timezone: "Europe/Moscow" },
+    { name: "Cape Town", timezone: "Africa/Johannesburg" }
+];
+
+function updateInternationalClock() {
+    const container = document.getElementById('internationalClockContainer');
+    container.innerHTML = ''; // Clear the container
+    const now = new Date();
+
+    cities.forEach(city => {
+        const cityTime = new Intl.DateTimeFormat('en-US', {
+            timeZone: city.timezone,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }).format(now);
+
+        const cityBlock = document.createElement('div');
+        cityBlock.classList.add('city-block');
+        cityBlock.innerHTML = `
+            <div class="city-name">${city.name}</div>
+            <div class="city-time">${cityTime}</div>
+        `;
+        container.appendChild(cityBlock);
+    });
+}
+
+// Update the clock every second
+setInterval(updateInternationalClock, 1000);
+
+// Initial call to populate the container
+updateInternationalClock();
+
+
+
+
 
 </script>
 </body>
